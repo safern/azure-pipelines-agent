@@ -23,6 +23,7 @@ namespace Microsoft.VisualStudio.Services.Agent.Worker
 
     public class ContainerOperationProvider : AgentService, IContainerOperationProvider
     {
+        private const string _nodeJsPathLabel = "com.azure.dev.pipelines.handler.node.path";
         private IDockerCommandManager _dockerManger;
 
         public override void Initialize(IHostContext hostContext)
@@ -208,6 +209,14 @@ namespace Microsoft.VisualStudio.Services.Agent.Worker
                     executionContext.Variables.Set(Constants.Variables.Agent.ContainerNetwork, container.ContainerNetwork);
                 }
 #endif
+                // See if this container brings its own Node.js
+                string nodeJsPath = await _dockerManger.DockerInspect(context: executionContext,
+                                                                      dockerObject: container.ContainerImage,
+                                                                      options: $"--format=\"{{{{index .Config.Labels \\\"{_nodeJsPathLabel}\\\"}}}}\"");
+                container.NodeJsPath = string.IsNullOrEmpty(nodeJsPath)
+                                     ? container.TranslateToContainerPath(Path.Combine(HostContext.GetDirectory(WellKnownDirectory.Externals), "node", "bin"))
+                                     : nodeJsPath;
+
                 container.ContainerId = await _dockerManger.DockerCreate(context: executionContext,
                                                                          displayName: container.ContainerDisplayName,
                                                                          image: container.ContainerImage,
