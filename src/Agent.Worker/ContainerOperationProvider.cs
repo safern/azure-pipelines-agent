@@ -331,21 +331,21 @@ namespace Microsoft.VisualStudio.Services.Agent.Worker
             executionContext.Output(StringUtil.Loc("GrantContainerUserSUDOPrivilege", containerUserName));
 
             // Create a new vsts_sudo group for giving sudo permission
-            int execGroupaddExitCode = await _dockerManger.DockerExec(executionContext, container.ContainerId, string.Empty, $"groupadd VSTS_Container_SUDO");
+            int execGroupaddExitCode = await _dockerManger.DockerExec(executionContext, container.ContainerId, string.Empty, $"groupadd vsts_container_sudo");
             if (execGroupaddExitCode != 0)
             {
                 throw new InvalidOperationException($"Docker exec fail with exit code {execGroupaddExitCode}");
             }
 
             // Add the new created user to the new created VSTS_SUDO group.
-            int execUsermodExitCode = await _dockerManger.DockerExec(executionContext, container.ContainerId, string.Empty, $"usermod -a -G VSTS_Container_SUDO {containerUserName}");
+            int execUsermodExitCode = await _dockerManger.DockerExec(executionContext, container.ContainerId, string.Empty, $"usermod -a -G vsts_container_sudo {containerUserName}");
             if (execUsermodExitCode != 0)
             {
                 throw new InvalidOperationException($"Docker exec fail with exit code {execUsermodExitCode}");
             }
 
             // Allow the new vsts_sudo group run any sudo command without providing password.
-            int execEchoExitCode = await _dockerManger.DockerExec(executionContext, container.ContainerId, string.Empty, $"su -c \"echo '%VSTS_Container_SUDO ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers\"");
+            int execEchoExitCode = await _dockerManger.DockerExec(executionContext, container.ContainerId, string.Empty, $"su -c \"echo '%vsts_container_sudo ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers\"");
             if (execUsermodExitCode != 0)
             {
                 throw new InvalidOperationException($"Docker exec fail with exit code {execEchoExitCode}");
