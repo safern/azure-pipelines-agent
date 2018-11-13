@@ -330,22 +330,22 @@ namespace Microsoft.VisualStudio.Services.Agent.Worker
 
             executionContext.Output(StringUtil.Loc("GrantContainerUserSUDOPrivilege", containerUserName));
 
-            // Create a new vsts_sudo group for giving sudo permission
-            int execGroupaddExitCode = await _dockerManger.DockerExec(executionContext, container.ContainerId, string.Empty, $"groupadd vsts_container_sudo");
+            // Create a new group for giving sudo permission
+            int execGroupaddExitCode = await _dockerManger.DockerExec(executionContext, container.ContainerId, string.Empty, $"groupadd azure_pipelines_sudo");
             if (execGroupaddExitCode != 0)
             {
                 throw new InvalidOperationException($"Docker exec fail with exit code {execGroupaddExitCode}");
             }
 
-            // Add the new created user to the new created VSTS_SUDO group.
-            int execUsermodExitCode = await _dockerManger.DockerExec(executionContext, container.ContainerId, string.Empty, $"usermod -a -G vsts_container_sudo {containerUserName}");
+            // Add the new created user to the new created sudo group.
+            int execUsermodExitCode = await _dockerManger.DockerExec(executionContext, container.ContainerId, string.Empty, $"usermod -a -G azure_pipelines_sudo {containerUserName}");
             if (execUsermodExitCode != 0)
             {
                 throw new InvalidOperationException($"Docker exec fail with exit code {execUsermodExitCode}");
             }
 
-            // Allow the new vsts_sudo group run any sudo command without providing password.
-            int execEchoExitCode = await _dockerManger.DockerExec(executionContext, container.ContainerId, string.Empty, $"su -c \"echo '%vsts_container_sudo ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers\"");
+            // Allow the new sudo group run any sudo command without providing password.
+            int execEchoExitCode = await _dockerManger.DockerExec(executionContext, container.ContainerId, string.Empty, $"su -c \"echo '%azure_pipelines_sudo ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers\"");
             if (execUsermodExitCode != 0)
             {
                 throw new InvalidOperationException($"Docker exec fail with exit code {execEchoExitCode}");
