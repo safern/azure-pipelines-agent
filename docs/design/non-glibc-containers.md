@@ -16,7 +16,7 @@ The agent will read a container label "com.azure.dev.pipelines.handler.node.path
 If it exists, it must be the path to the directory containing Node.js.
 For example, in an image based on `node:10-alpine`, add this line to your Dockerfile:
 ```
-LABEL "com.azure.dev.pipelines.handler.node.path"="/usr/local/bin/"
+LABEL "com.azure.dev.pipelines.agent.handler.node.path"="/usr/local/bin/"
 ```
 
 ## Add requirements
@@ -38,7 +38,7 @@ RUN apk add --no-cache --virtual .pipeline-deps readline linux-pam \
   && apk add bash sudo which shadow \
   && apk del .pipeline-deps
 
-LABEL "com.azure.dev.pipelines.handler.node.path"="/usr/local/bin/"
+LABEL "com.azure.dev.pipelines.agent.handler.node.path"="/usr/local/bin/"
 
 CMD [ "node" ]
 

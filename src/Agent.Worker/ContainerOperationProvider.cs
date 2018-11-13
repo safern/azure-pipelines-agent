@@ -23,7 +23,7 @@ namespace Microsoft.VisualStudio.Services.Agent.Worker
 
     public class ContainerOperationProvider : AgentService, IContainerOperationProvider
     {
-        private const string _nodeJsPathLabel = "com.azure.dev.pipelines.handler.node.path";
+        private const string _nodeJsPathLabel = "com.azure.dev.pipelines.agent.handler.node.path";
         private IDockerCommandManager _dockerManger;
 
         public override void Initialize(IHostContext hostContext)
