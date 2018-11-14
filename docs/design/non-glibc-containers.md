@@ -13,10 +13,10 @@ You can start from the `node:10-alpine` image.
 
 ## Tell the agent about Node.js
 The agent will read a container label "com.azure.dev.pipelines.handler.node.path".
-If it exists, it must be the path to the directory containing Node.js.
+If it exists, it must be the path to the Node.js binary.
 For example, in an image based on `node:10-alpine`, add this line to your Dockerfile:
 ```
-LABEL "com.azure.dev.pipelines.agent.handler.node.path"="/usr/local/bin/"
+LABEL "com.azure.dev.pipelines.agent.handler.node.path"="/usr/local/bin/node"
 ```
 
 ## Add requirements
@@ -38,7 +38,7 @@ RUN apk add --no-cache --virtual .pipeline-deps readline linux-pam \
   && apk add bash sudo which shadow \
   && apk del .pipeline-deps
 
-LABEL "com.azure.dev.pipelines.agent.handler.node.path"="/usr/local/bin/"
+LABEL "com.azure.dev.pipelines.agent.handler.node.path"="/usr/local/bin/node"
 
 CMD [ "node" ]
 
