@@ -124,11 +124,11 @@ namespace Microsoft.VisualStudio.Services.Agent.Worker.Container
             string node = context.Container.NodeJsPath;
             string sleepCommand = $"\"{node}\" -e \"setInterval(function(){{}}, 24 * 60 * 60 * 1000);\"";
 #if OS_WINDOWS
-            string dockerArgs = $"--name {displayName} {options} {dockerEnvArgs} {dockerMountVolumesArgs} {image} {sleepCommand}";  // add --network={network} and -v '\\.\pipe\docker_engine:\\.\pipe\docker_engine' when they are available (17.09)
+            string dockerArgs = $"-td --name {displayName} {options} {dockerEnvArgs} {dockerMountVolumesArgs} {image}";  // add --network={network} and -v '\\.\pipe\docker_engine:\\.\pipe\docker_engine' when they are available (17.09)
 #else
-            string dockerArgs = $"--name {displayName} --network={network} -v /var/run/docker.sock:/var/run/docker.sock {options} {dockerEnvArgs} {dockerMountVolumesArgs} {image} {sleepCommand}";
+            string dockerArgs = $"-td --name {displayName} --network {network} -v /var/run/docker.sock:/var/run/docker.sock {options} {dockerEnvArgs} {dockerMountVolumesArgs} {image}";
 #endif
-            List<string> outputStrings = await ExecuteDockerCommandAsync(context, "create", dockerArgs);
+            List<string> outputStrings = await ExecuteDockerCommandAsync(context, "run", dockerArgs);
             return outputStrings.FirstOrDefault();
         }
 

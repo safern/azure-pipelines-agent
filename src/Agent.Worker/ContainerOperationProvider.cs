@@ -226,13 +226,6 @@ namespace Microsoft.VisualStudio.Services.Agent.Worker
                                                                          environment: container.ContainerEnvironmentVariables);
                 ArgUtil.NotNullOrEmpty(container.ContainerId, nameof(container.ContainerId));
                 executionContext.Variables.Set(Constants.Variables.Agent.ContainerId, container.ContainerId);
-
-                // Start container
-                int startExitCode = await _dockerManger.DockerStart(executionContext, container.ContainerId);
-                if (startExitCode != 0)
-                {
-                    throw new InvalidOperationException($"Docker start fail with exit code {startExitCode}");
-                }
             }
             finally
             {
