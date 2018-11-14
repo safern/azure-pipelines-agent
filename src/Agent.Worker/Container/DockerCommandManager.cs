@@ -216,9 +216,7 @@ namespace Microsoft.VisualStudio.Services.Agent.Worker.Container
         public async Task<string> DockerInspect(IExecutionContext context, string dockerObject, string options)
         {
             string optionsAndTarget = options + " " + dockerObject;
-            context.Output("docker inspect " + optionsAndTarget);
             string result = (await ExecuteDockerCommandAsync(context, "inspect", optionsAndTarget)).FirstOrDefault();
-            context.Output($"  result: {result}");
             return result;
         }
 
