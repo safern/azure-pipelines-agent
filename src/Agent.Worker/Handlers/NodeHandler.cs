@@ -107,7 +107,7 @@ namespace Microsoft.VisualStudio.Services.Agent.Worker.Handlers
             }
             else
             {
-                file = Path.Combine(ExecutionContext.Container.NodeJsPath, $"node{IOUtil.ExeExtension}");
+                file = ExecutionContext.Container.NodeJsPath;
             }
             // Format the arguments passed to node.
             // 1) Wrap the script file path in double quotes.

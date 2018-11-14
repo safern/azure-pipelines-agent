@@ -214,7 +214,7 @@ namespace Microsoft.VisualStudio.Services.Agent.Worker
                                                                       dockerObject: container.ContainerImage,
                                                                       options: $"--format=\"{{{{index .Config.Labels \\\"{_nodeJsPathLabel}\\\"}}}}\"");
                 container.NodeJsPath = string.IsNullOrEmpty(nodeJsPath)
-                                     ? container.TranslateToContainerPath(Path.Combine(HostContext.GetDirectory(WellKnownDirectory.Externals), "node", "bin"))
+                                     ? container.TranslateToContainerPath(Path.Combine(HostContext.GetDirectory(WellKnownDirectory.Externals), "node", "bin", $"node{IOUtil.ExeExtension}"))
                                      : nodeJsPath;
 
                 container.ContainerId = await _dockerManger.DockerCreate(context: executionContext,
