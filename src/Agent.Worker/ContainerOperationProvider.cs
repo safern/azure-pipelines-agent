@@ -320,7 +320,7 @@ namespace Microsoft.VisualStudio.Services.Agent.Worker
             // Create a new user with same UID
             if (string.IsNullOrEmpty(containerUserName))
             {
-                containerUserName = $"{container.CurrentUserName}_VSTSContainer";
+                containerUserName = $"{container.CurrentUserName}_azpcontainer";
                 int execUseraddExitCode = await _dockerManger.DockerExec(executionContext, container.ContainerId, string.Empty, $"useradd -m -u {container.CurrentUserId} {containerUserName}");
                 if (execUseraddExitCode != 0)
                 {
